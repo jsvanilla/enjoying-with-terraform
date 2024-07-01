@@ -50,3 +50,19 @@ module "security_groups" {
   source      = "./modules/security_groups"
   vpc_id      = module.vpc.vpc_id
 }
+
+output "vpc_id" {
+  value = module.vpc.vpc_id
+}
+
+output "subnet_ids" {
+  value = module.vpc.subnet_ids
+}
+
+output "eks_cluster_endpoint" {
+  value = module.eks.eks_cluster_endpoint
+}
+
+output "rds_endpoint" {
+  value = module.rds.rds_endpoint
+}
