@@ -1,0 +1,31 @@
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
+    update_cache: yes
+
+- name: Install Docker-Compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+
+- name: Create Node.js Docker Compose file
+  copy:
+    dest: /opt/nodejs/docker-compose.yml
+    content: |
+      version: '3'
+      services:
+        nodejs:
+          image: nodejs:latest
+          ports:
+            - "3000:3000"
+          environment:
+            - AWS_REGION=us-west-2
+            - DYNAMODB_TABLE=syllables
+            - GO_QUEUE_URL=https://sqs.us-west-2.amazonaws.com/your-account-id/go_to_python
+
+- name: Start Node.js server
+  command: docker-compose up -d
+  args:
+    chdir: /opt/nodejs

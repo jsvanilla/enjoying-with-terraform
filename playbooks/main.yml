@@ -1,0 +1,14 @@
+- name: Provision Python FastAPI Server
+  hosts: python_servers
+  roles:
+    - python_server
+
+- name: Provision Node.js Server
+  hosts: nodejs_servers
+  roles:
+    - nodejs_server
+
+- name: Provision Go Server
+  hosts: go_servers
+  roles:
+    - go_server
