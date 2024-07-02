@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ansible-playbooks
+  namespace: backend
+data:
+  main.yml: |
+    - name: Provision Python FastAPI Server
+      hosts: localhost
+      roles:
+        - python_server
+
+    - name: Provision Node.js Server
+      hosts: localhost
+      roles:
+        - nodejs_server
+
+    - name: Provision Go Server
+      hosts: localhost
+      roles:
+        - go_server

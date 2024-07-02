@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ansible-roles
+  namespace: backend
+data:
+  python_server.yml: |
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Install Docker-Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Create FastAPI Docker Compose file
+      copy:
+        dest: /opt/fastapi/docker-compose.yml
+        content: |
+          version: '3'
+          services:
+            fastapi:
+              image: fastapi:latest
+              ports:
+                - "80:80"
+              environment:
+                - AWS_REGION=us-west-2
+                - SQS_NODEJS_TO_GO_URL=https://sqs.us-west-2.amazonaws.com/your-account-id/nodejs_to_go
+                - SQS_GO_TO_PYTHON_URL=https://sqs.us-west-2.amazonaws.com/your-account-id/go_to_python
+
+    - name: Start FastAPI server
+      command: docker-compose up -d
+      args:
+        chdir: /opt/fastapi
+
+  nodejs_server.yml: |
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Install Docker-Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Create Node.js Docker Compose file
+      copy:
+        dest: /opt/nodejs/docker-compose.yml
+        content: |
+          version: '3'
+          services:
+            nodejs:
+              image: nodejs:latest
+              ports:
+                - "3000:3000"
+              environment:
+                - AWS_REGION=us-west-2
+                - DYNAMODB_TABLE=syllables
+                - GO_QUEUE_URL=https://sqs.us-west-2.amazonaws.com/your-account-id/go_to_python
+
+    - name: Start Node.js server
+      command: docker-compose up -d
+      args:
+        chdir: /opt/nodejs
+
+  go_server.yml: |
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Install Docker-Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Create Go server Docker Compose file
+      copy:
+        dest: /opt/go/docker-compose.yml
+        content: |
+          version: '3'
+          services:
+            go-server:
+              image: go-server:latest
+              ports:
+                - "8080:8080"
+              environment:
+                - REGION=us-west-2
+                - SQS_QUEUE_URL=https://sqs.us-west-2.amazonaws.com/your-account-id/nodejs_to_go
+                - RDS_USER=admin
+                - RDS_PASSWORD=password
+                - RDS_HOST=your-rds-endpoint
+                - RDS_DATABASE=your-database-name
+
+    - name: Start Go server
+      command: docker-compose up -d
+      args:
+        chdir: /opt/go

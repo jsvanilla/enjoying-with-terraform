@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: python-server-job
+  namespace: backend
+spec:
+  template:
+    spec:
+      containers:
+      - name: ansible
+        image: williamyeh/ansible:alpine3
+        command: ["/bin/sh", "-c"]
+        args:
+          - ansible-playbook -i "localhost," -c local /ansible/playbooks/main.yml --tags "python_server";
+        volumeMounts:
+        - name: ansible-playbooks
+          mountPath: /ansible/playbooks
+      restartPolicy: Never
+      volumes:
+      - name: ansible-playbooks
+        configMap:
+          name: ansible-playbooks
+  backoffLimit: 4

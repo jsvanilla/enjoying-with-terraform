@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-server
+  namespace: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: python-server
+  template:
+    metadata:
+      labels:
+        app: python-server
+    spec:
+      containers:
+      - name: python-server
+        image: fastapi:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: AWS_REGION
+          value: "us-west-2"
+        - name: SQS_NODEJS_TO_GO_URL
+          value: "https://sqs.us-west-2.amazonaws.com/your-account-id/nodejs_to_go"
+        - name: SQS_GO_TO_PYTHON_URL
+          value: "https://sqs.us-west-2.amazonaws.com/your-account-id/go_to_python"
