@@ -1,5 +1,33 @@
 provider "aws" {
-  region = "us-west-2"
+  region = var.aws_region
+}
+
+resource "aws_ecr_repository" "main" {
+  name = var.ecr_repository
+}
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecsTaskExecutionRole"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  ]
+}
+
+output "ecr_repository_url" {
+  value = aws_ecr_repository.main.repository_url
 }
 
 module "vpc" {

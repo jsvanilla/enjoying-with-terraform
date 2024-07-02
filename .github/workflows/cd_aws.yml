@@ -1,0 +1,75 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Log in to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      with:
+        region: ${{ secrets.AWS_REGION }}
+
+    - name: Build and push Docker image
+      id: build-image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+
+    - name: Download Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Initialize Terraform
+      run: terraform init
+      working-directory: ./terraform
+
+    - name: Apply Terraform
+      run: terraform apply -auto-approve
+      working-directory: ./terraform
+
+    - name: Install Ansible
+      run: sudo apt-get update && sudo apt-get install -y ansible
+
+    - name: Run Ansible playbook
+      run: ansible-playbook playbooks/main.yml
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'v1.18.15'
+
+    - name: Apply Kubernetes configurations
+      run: |
+        kubectl apply -f namespaces/backend-namespace.yml
+        kubectl apply -f configmap-ansible-playbooks.yml
+        kubectl apply -f configmap-ansible-roles.yml
+        kubectl apply -f deployments/python-server-deployment.yml
+        kubectl apply -f deployments/nodejs-server-deployment.yml
+        kubectl apply -f deployments/go-server-deployment.yml
+        kubectl apply -f services/python-server-service.yml
+        kubectl apply -f services/nodejs-server-service.yml
+        kubectl apply -f services/go-server-service.yml
+        kubectl apply -f jobs/python-server-job.yml
+        kubectl apply -f jobs/nodejs-server-job.yml
+        kubectl apply -f jobs/go-server-job.yml
+        kubectl apply -f roles/role.yml
+        kubectl apply -f roles/rolebinding.yml
+        kubectl apply -f hpa/python-server-hpa.yml
+        kubectl apply -f hpa/nodejs-server-hpa.yml
+        kubectl apply -f hpa/go-server-hpa.yml
+      env:
+        KUBECONFIG: ${{ secrets.KUBECONFIG }}
