@@ -1,6 +1,6 @@
 # "Hello World" Enjoying-with-terraform
 
-Dado que la prueba técnica es mas una demostración de skills técnicos que de cumplir un requerimiento de negocio especifico, me di a la libertad de adaptarla para demostrar conocimientos en: 
+Dado que la prueba técnica es más una demostración de skills técnicos que de cumplir un requerimiento de negocio especifico, me di a la libertad de adaptarla para demostrar conocimientos en: 
 
 - Kubernetes en EKS, RBAC, Roles y RoleBiding, Services
 - Monitoreo y Observabilidad con AWS CloudWatch configurado desde terraform (al igual que toda la infra)
@@ -8,6 +8,7 @@ Dado que la prueba técnica es mas una demostración de skills técnicos que de 
 - El puerto publico se agregó usando Amazon API Gateway en lugar de usar un ingress controller
 - Bases de datos relacionales y no relacionales con RDS y Dynamo DB
 - Provisionamiento de servidores usando Ansible con los Jobs de Kubernetes
+- Cifrado de secretos con kubeseal y ansible vault
 
 
 Cada silaba del “Hola Mundo” se extrae de diferentes microservicios conectados por Amazon SQS. Algunos de los cuales hacen request a instancias de RDS y Dynamo DB con la configuración de seguridad mas optima posible
