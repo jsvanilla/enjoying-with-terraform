@@ -71,7 +71,9 @@ module "secretsmanager" {
 }
 
 module "cloudwatch" {
-  source = "./modules/cloudwatch"
+  source        = "./modules/cloudwatch"
+  cluster_name  = module.eks.cluster_name
+  alarm_action  = "arn:aws:sns:us-west-2:123456789012:my-sns-topic" 
 }
 
 module "security_groups" {

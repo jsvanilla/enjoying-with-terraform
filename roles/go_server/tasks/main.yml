@@ -21,12 +21,12 @@
           ports:
             - "8080:8080"
           environment:
-            - REGION=us-west-2
-            - SQS_QUEUE_URL=https://sqs.us-west-2.amazonaws.com/your-account-id/nodejs_to_go
-            - RDS_USER=admin
-            - RDS_PASSWORD=password
-            - RDS_HOST=your-rds-endpoint
-            - RDS_DATABASE=your-database-name
+            - REGION={{ vault_vars.aws_region }}
+            - SQS_QUEUE_URL={{ vault_vars.sqs_queue_url }}
+            - RDS_USER={{ vault_vars.rds_user }}
+            - RDS_PASSWORD={{ vault_vars.rds_password }}
+            - RDS_HOST={{ vault_vars.rds_host }}
+            - RDS_DATABASE={{ vault_vars.rds_database }}
 
 - name: Start Go server
   command: docker-compose up -d

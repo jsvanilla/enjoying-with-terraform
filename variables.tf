@@ -9,3 +9,13 @@ variable "ecr_repository" {
   type        = string
   default     = "my-repository"
 }
+
+variable "cluster_name" {
+  description = "The name of the EKS cluster"
+  type        = string
+}
+
+variable "alarm_action" {
+  description = "The action to take when the alarm is triggered"
+  type        = string
+}

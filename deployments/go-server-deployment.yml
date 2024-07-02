@@ -20,14 +20,32 @@ spec:
         - containerPort: 8080
         env:
         - name: REGION
-          value: "us-west-2"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: AWS_REGION
         - name: SQS_QUEUE_URL
-          value: "https://sqs.us-west-2.amazonaws.com/your-account-id/nodejs_to_go"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: SQS_NODEJS_TO_GO_URL
         - name: RDS_USER
-          value: "admin"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: RDS_USER
         - name: RDS_PASSWORD
-          value: "password"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: RDS_PASSWORD
         - name: RDS_HOST
-          value: "your-rds-endpoint"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: RDS_HOST
         - name: RDS_DATABASE
-          value: "your-database-name"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: RDS_DATABASE

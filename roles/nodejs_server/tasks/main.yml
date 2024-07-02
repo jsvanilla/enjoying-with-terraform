@@ -21,9 +21,9 @@
           ports:
             - "3000:3000"
           environment:
-            - AWS_REGION=us-west-2
-            - DYNAMODB_TABLE=syllables
-            - GO_QUEUE_URL=https://sqs.us-west-2.amazonaws.com/your-account-id/go_to_python
+            - AWS_REGION={{ vault_vars.aws_region }}
+            - DYNAMODB_TABLE={{ vault_vars.dynamodb_table }}
+            - GO_QUEUE_URL={{ vault_vars.go_queue_url }}
 
 - name: Start Node.js server
   command: docker-compose up -d

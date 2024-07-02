@@ -20,8 +20,14 @@ spec:
         - containerPort: 3000
         env:
         - name: AWS_REGION
-          value: "us-west-2"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: AWS_REGION
         - name: DYNAMODB_TABLE
           value: "syllables"
         - name: GO_QUEUE_URL
-          value: "https://sqs.us-west-2.amazonaws.com/your-account-id/go_to_python"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: SQS_GO_TO_PYTHON_URL

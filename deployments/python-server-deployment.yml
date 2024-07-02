@@ -12,16 +12,19 @@ spec:
     metadata:
       labels:
         app: python-server
-    spec:
-      containers:
-      - name: python-server
-        image: fastapi:latest
-        ports:
-        - containerPort: 80
-        env:
+    env:
         - name: AWS_REGION
-          value: "us-west-2"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: AWS_REGION
         - name: SQS_NODEJS_TO_GO_URL
-          value: "https://sqs.us-west-2.amazonaws.com/your-account-id/nodejs_to_go"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: SQS_NODEJS_TO_GO_URL
         - name: SQS_GO_TO_PYTHON_URL
-          value: "https://sqs.us-west-2.amazonaws.com/your-account-id/go_to_python"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: SQS_GO_TO_PYTHON_URL
