@@ -1,22 +1,21 @@
 # "Hello World" Enjoying-with-terraform
 
-Dado que la prueba técnica es más una demostración de skills técnicos que de cumplir un requerimiento de negocio especifico, me di a la libertad de adaptarla para demostrar conocimientos en: 
+Since the technical test is more of a demonstration of technical skills rather than fulfilling a specific business requirement, I took the liberty to adapt it to demonstrate knowledge in: 
 
-- Kubernetes en EKS, RBAC, Roles y RoleBiding, Services
-- Monitoreo y Observabilidad con AWS CloudWatch configurado desde terraform (al igual que toda la infra)
-- Microservicios publicos y privados con virtual networks, vpn, security rules, y su relación con los distintos services en Kubernetes
-- El puerto publico se agregó usando Amazon API Gateway en lugar de usar un ingress controller
-- Bases de datos relacionales y no relacionales con RDS y Dynamo DB
-- Provisionamiento de servidores usando Ansible con los Jobs de Kubernetes
-- Cifrado de secretos con kubeseal y ansible vault
+- Kubernetes on EKS, RBAC, Roles and RoleBinding, Services
+- Monitoring and Observability with AWS CloudWatch configured via Terraform (as well as all the infrastructure)
+- Public and private microservices using virtual networks, VPN, security rules, and their relation to different services in Kubernetes
+- The public port was added using Amazon API Gateway instead of using an ingress controller
+- Relational and non-relational databases with RDS and Dynamo DB
+- Server provisioning using Ansible with Kubernetes Jobs
+- Secrets encryption using kubeseal and ansible vault
 
+Each syllable of the “Hello World” message is retrieved from different microservices connected via Amazon SQS. Some of these services make requests to RDS and Dynamo DB instances with the most optimal security configuration possible.
 
-Cada silaba del “Hola Mundo” se extrae de diferentes microservicios conectados por Amazon SQS. Algunos de los cuales hacen request a instancias de RDS y Dynamo DB con la configuración de seguridad mas optima posible
+## ALL THE INFRASTRUCTURE WAS CREATED USING A TEMPORARY SANDBOX SESSION FROM KODEKLOUD, SO EVEN THOUGH IT IS ENCRYPTED FOR PRACTICAL PURPOSES, YOU NEED TO CHANGE THE VARIABLES TO RUN THE INFRASTRUCTURE: 
 
-## TODA LA INFRA SE CREO USANDO UNA SESION TEMPORAL DE SANDBOX DE KODEKLOUD, POR LO QUE AUNQUE ESTA ENCRIPTADO PARA PROPOSITOS PRACTICOS, HAY QUE CAMBIAR LAS VARIABLES PARA CORRER LA INFRA: 
-
-Comandos para desencriptar el Ansible Vault:
-Contraseña: josedevops
+Commands to decrypt the Ansible Vault:
+Password: josedevops
 ```
 ansible-vault decrypt roles/python_server/vars/vault.yml
 
@@ -25,13 +24,13 @@ ansible-vault decrypt roles/nodejs_server/vars/vault.yml
 ansible-vault decrypt roles/go_server/vars/vault.yml
 ```
 
-## Se usó kubeseal para encriptar los deployments yml y se colocó en el gitignore el archivo sectrets.yml
+## Kubeseal was used to encrypt the deployment YAMLs, and the secrets.yml file was added to the gitignore.
 
-## Cosas que faltaron en este ejercicio:
-- Distintos ambientes (test/dev/stagging)
-- Gitflow con políticas de branching en dev y main
-- 4 ambientes productivos en lugar de solo 1 (dev, test, stagging, main)
-- Que cada backend tenga su propio repo mas el repo de la infra
-- Implementación de Argo CD
-- Solo hay pipelines de CI del servidor de python, una vez que pasa los test y la aprobacion de sonarcloud, se corre en CD el pipeline completo de infra
-- La infra se corrió en local, y no se han añadido las variables de entorno para correr los 2 pipelines
+## Things that were missing in this exercise:
+- Different environments (test/dev/staging)
+- Gitflow with branching policies for dev and main
+- 4 production environments instead of just 1 (dev, test, staging, main)
+- Each backend having its own repository plus the infra repository
+- Argo CD implementation
+- There are only CI pipelines for the Python server; once it passes the tests and SonarCloud approval, the full infra CD pipeline runs
+- The infrastructure was run locally, and the environment variables to run the two pipelines haven't been added
